@@ -1,0 +1,27 @@
+# Secrets — NEVER commit this
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Data files (too large / proprietary)
+etl/data/
+*.gdb/
+*.shp
+*.dbf
+*.shx
+*.prj
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Misc
+.DS_Store
+*.log

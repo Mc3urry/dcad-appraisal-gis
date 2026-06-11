@@ -1,0 +1,10 @@
+.git
+.venv
+venv
+__pycache__
+.pytest_cache
+*.gdb
+frontend/node_modules
+
+# Secrets — never bake into the image
+.env

@@ -1,0 +1,77 @@
+# Docker Compose — DCAD Appraisal GIS Platform
+# Secrets are read from .env in the project root (never committed).
+# Copy .env.example -> .env and set real values before `docker compose up`.
+
+services:
+  postgis:
+    image: postgis/postgis:15-3.4
+    container_name: dcad_postgis_warehouse
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    networks:
+      - dcad_network
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: dcad_fastapi_engine
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      - SPATIAL_DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB}
+      - BUSINESS_DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - postgis
+    networks:
+      - dcad_network
+
+  automation-daemon:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: dcad_nightly_pipeline
+    restart: unless-stopped
+    environment:
+      - SPATIAL_DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB}
+      - BUSINESS_DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DB}
+      # Scheduler fires on the container clock; set local time so "00:00" means midnight in Dallas.
+      - TZ=America/Chicago
+    depends_on:
+      - postgis
+    networks:
+      - dcad_network
+    volumes:
+      # Maps local GIS data dynamically into the container
+      - ./etl/data:/app/etl/data
+    command: ["python", "api/cron_nightly_pipeline.py"]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: dcad_react_gis_interface
+    command: npm run dev -- --host 0.0.0.0 --port 3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - api
+    networks:
+      - dcad_network
+
+# 🌐 GLOBAL NETWORKS REGISTER
+networks:
+  dcad_network:
+    driver: bridge
+
+# 💾 GLOBAL VOLUMES REGISTER
+volumes:
+  postgis_data:
