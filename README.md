@@ -1,6 +1,6 @@
 # Dallas County Appraisal District — GIS Data Platform
 
-A full-stack geospatial data platform that ingests **694,000+ real Dallas County parcel records** into a PostGIS warehouse, runs a six-phase automated nightly pipeline (ETL → topology QA → change detection → ML scoring → history snapshots), and serves an interactive ArcGIS-powered map with role-based workflows for appraisers, analysts, GIS editors, and public citizens.
+A full-stack geospatial data platform that ingests **~700,000 real Dallas County parcel records** into a PostGIS warehouse, runs a six-phase automated nightly pipeline (ETL → topology QA → change detection → ML scoring → history snapshots), and serves an interactive ArcGIS-powered map with role-based workflows for appraisers, analysts, GIS editors, and public citizens.
 
 > **Disclaimer:** Personal portfolio project built on public DCAD open data. Not affiliated with or endorsed by the Dallas Central Appraisal District.
 
