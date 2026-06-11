@@ -97,7 +97,7 @@ docker compose up -d --build
 
 - Frontend: http://127.0.0.1:3000 · API docs: http://127.0.0.1:8000/docs
 
-**Parcel data is not included in this repository** (≈300 MB file geodatabase, excluded via `.gitignore`). Download the parcel/account extracts from the [DCAD open data portal](https://www.dallascad.org), build the joined geodatabase layer, and place it at `etl/data/tablejoiner/tablejoiner.gdb` (layer `dcad_parcels`), then trigger the pipeline with `--now` as shown above. The application runs without data — the map and dashboards simply start empty.
+**Parcel data is not included in this repository** (≈300 MB file geodatabase, excluded via `.gitignore`). Download the parcel and account extracts from the [DCAD open data portal](https://www.dallascad.org), build the joined geodatabase layer, and place it at `etl/data/tablejoiner/tablejoiner.gdb` (layer `dcad_parcels`), then trigger the pipeline with `--now` as shown above. The application runs without data — the map and dashboards simply start empty.
 
 ## Roadmap
 
