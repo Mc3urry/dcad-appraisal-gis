@@ -46,12 +46,12 @@ docker compose run --rm automation-daemon python api/cron_nightly_pipeline.py --
 
 ## Key Engineering Decisions
 
-- **Upsert over truncate.** The loader originally used `TRUNCATE ... CASCADE`, which silently wiped the protest and history tables (FK cascade) every night. Rewritten as a chunked `ON CONFLICT DO UPDATE` stream with stale-row reconciliation — longitudinal data now survives refreshes.
-- **Schema-introspecting ETL & ML.** Both the loader and the feature extractor query `information_schema` and adapt to the columns that actually exist, with loud warnings on drift — no more silent data loss when source exports change shape.
-- **Defensive valuation handling.** `lma`/`ima` are stored as text by design (DCAD uses statuses like `UNASSIGNED`); every consumer — ML, history, API, frontend — coerces defensively instead of crashing on non-numeric values.
-- **Geometry sanitization before union.** County-wide `ST_Union` on raw parcel fabric throws GEOS `TopologyException`s; the gaps rule repairs (`ST_MakeValid`), snaps (`ST_SnapToGrid`), and buffers before unioning.
-- **Bounded dashboards.** QA endpoints cap and severity-rank results; the frontend hard-caps rendered cards — a county's worth of topology violations can't freeze the browser.
-- **RBAC at the API.** JWT-authenticated roles (admin, analyst, appraiser, GIS editor, public citizen) gate every dashboard and workflow; protest filing is restricted to authenticated public citizens and fully audit-logged.
+- **Upsert over truncate --** The loader originally used `TRUNCATE ... CASCADE`, which silently wiped the protest and history tables (FK cascade) every night. Rewritten as a chunked `ON CONFLICT DO UPDATE` stream with stale-row reconciliation — longitudinal data now survives refreshes.
+- **Schema-introspecting ETL & ML --** Both the loader and the feature extractor query `information_schema` and adapt to the columns that actually exist, with loud warnings on drift — no more silent data loss when source exports change shape.
+- **Defensive valuation handling --** `lma`/`ima` are stored as text by design (DCAD uses statuses like `UNASSIGNED`); every consumer — ML, history, API, frontend — coerces defensively instead of crashing on non-numeric values.
+- **Geometry sanitization before union --** County-wide `ST_Union` on raw parcel fabric throws GEOS `TopologyException`s; the gaps rule repairs (`ST_MakeValid`), snaps (`ST_SnapToGrid`), and buffers before unioning.
+- **Bounded dashboards --** QA endpoints cap and severity-rank results; the frontend hard-caps rendered cards — a county's worth of topology violations can't freeze the browser.
+- **RBAC at the API --** JWT-authenticated roles (admin, analyst, appraiser, GIS editor, public citizen) gate every dashboard and workflow; protest filing is restricted to authenticated public citizens and fully audit-logged.
 
 ## Database Schema (core tables)
 
