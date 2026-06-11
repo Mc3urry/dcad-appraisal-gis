@@ -32,7 +32,7 @@ Four Docker services: **postgis** (spatial warehouse), **api** (FastAPI), **auto
 | Time  | Phase | What it does |
 |-------|-------|--------------|
 | 00:00 | **Ingestion** | Reads the file geodatabase with GeoPandas, validates geometry/attributes, reprojects to EPSG:4326, and **upserts** ~700k parcels (`ON CONFLICT DO UPDATE`) so child tables survive refreshes; reconciles parcels removed from source |
-| 01:00 | **Topology QA** | Four PostGIS rules — overlaps (`ST_Overlaps`), multi-part geometries, sliver gaps (sanitized `ST_Union` envelope differencing), self-intersections (`ST_IsValid`) — each isolated in its own transaction; violations logged to a severity-ranked QA queue |
+| 01:00 | **Topology QA** | Four PostGIS rules — overlaps (`ST_Overlaps`), multi-part geometries, sliver gaps (sanitized `ST_Union` envelope differencing), self-intersections (`ST_IsValid`) — are isolated in its own transaction; violations logged to a severity-ranked QA queue |
 | 02:00 | **Change Detection** | Intersects detected imagery variances with parcel boundaries and dispatches field-inspection workflows *(detection itself currently mocked — see Roadmap)* |
 | 03:00 | **ML Scoring** | Schema-introspecting feature extraction (valuations, absentee ownership, corporate-entity flags, protest history) feeding a RandomForest protest-risk model and an IsolationForest valuation-anomaly detector; scores written back to the warehouse |
 | 04:00 | **History Snapshot** | Appends one ledger row per (account, appraisal year) with computed year-over-year value change percentages — idempotent via unique index |
