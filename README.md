@@ -75,7 +75,7 @@ Full DDL in [`db/schema.sql`](db/schema.sql).
 | ![ML anomalies](docs/screenshots/04_ml_anomalies.png) | ![Pipeline run](docs/screenshots/05_pipeline_run.png) |
 | Isolation Forest valuation outliers | Full nightly pipeline executing |
 
-🎥 **[Watch the 5-minute walkthrough on Loom](PASTE_LOOM_LINK_HERE)**
+🎥 **[Watch the 5-minute walkthrough on Loom]([PASTE_LOOM_LINK_HERE](https://www.loom.com/share/6832a1e91ef949d79e582283c7425692))**
 
 ## Tech Stack
 
